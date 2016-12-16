@@ -1,7 +1,7 @@
 <!doctype HTML>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>Shopping List</title>
+<title>ToDos List</title>
 
 <!-- CSS -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/pure-min.css">
@@ -69,7 +69,7 @@ li {
 </style>
 
 <div class="main">
-    <h1>Shopping List</h1>
+    <h1>To Dos</h1>
     <div class="inner">
         <form class="add-item-form">
             <label for="item-input">Add an item</label>
@@ -112,7 +112,7 @@ li {
 <script src="https://code.jquery.com/jquery-2.1.0.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.3.0/handlebars.js"></script>
 <script>
-var ShoppingList = function() {
+var ToDosList = function() {
     this.items = [];
     this.itemList = $('.item-list');
     this.itemListTemplate = Handlebars.compile($("#item-list-template").html());
@@ -130,7 +130,7 @@ var ShoppingList = function() {
                  this.onDeleteItemClicked.bind(this));
     this.getItems();
 };
-ShoppingList.prototype.onAddItemSubmit = function(event) {
+ToDosList.prototype.onAddItemSubmit = function(event) {
     event.preventDefault();
     var value = this.input.val().trim();
     if (value != '') {
@@ -138,7 +138,7 @@ ShoppingList.prototype.onAddItemSubmit = function(event) {
     }
     this.form[0].reset();
 };
-ShoppingList.prototype.onEditItemClicked = function(event) {
+ToDosList.prototype.onEditItemClicked = function(event) {
     event.preventDefault();
     var item = $(event.target).parents('li');
     var display = item.children('.display');
@@ -150,12 +150,12 @@ ShoppingList.prototype.onEditItemClicked = function(event) {
     input.val(name.text());
     display.hide();
 };
-ShoppingList.prototype.onEditItemSubmit = function(event) {
+ToDosList.prototype.onEditItemSubmit = function(event) {
     event.preventDefault();
     var input = $(event.target).children('input');
     input.blur();
 };
-ShoppingList.prototype.onEditFocusOut = function(event) {
+ToDosList.prototype.onEditFocusOut = function(event) {
     var item = $(event.target).parents('li');
     var id = item.data('id');
     var display = item.children('.display');
@@ -171,18 +171,18 @@ ShoppingList.prototype.onEditFocusOut = function(event) {
     display.show();
     event.preventDefault();
 };
-ShoppingList.prototype.onDeleteItemClicked = function(event) {
+ToDosList.prototype.onDeleteItemClicked = function(event) {
     var id = $(event.target).parents('li').data('id');
     this.deleteItem(id);
 };
-ShoppingList.prototype.getItems = function() {
+ToDosList.prototype.getItems = function() {
     var ajax = $.ajax('/items', {
         type: 'GET',
         dataType: 'json'
     });
     ajax.done(this.onGetItemsDone.bind(this));
 };
-ShoppingList.prototype.addItem = function(name) {
+ToDosList.prototype.addItem = function(name) {
     var item = {'name': name};
     var ajax = $.ajax('/items', {
         type: 'POST',
@@ -192,14 +192,14 @@ ShoppingList.prototype.addItem = function(name) {
     });
     ajax.done(this.getItems.bind(this));
 };
-ShoppingList.prototype.deleteItem = function(id) {
+ToDosList.prototype.deleteItem = function(id) {
     var ajax = $.ajax('/items/' + id, {
         type: 'DELETE',
         dataType: 'json'
     });
     ajax.done(this.getItems.bind(this));
 };
-ShoppingList.prototype.editItem = function(id, name) {
+ToDosList.prototype.editItem = function(id, name) {
     var item = {'name': name, 'id': id};
     var ajax = $.ajax('/items/' + id, {
         type: 'PUT',
@@ -209,11 +209,11 @@ ShoppingList.prototype.editItem = function(id, name) {
     });
     ajax.done(this.getItems.bind(this));
 };
-ShoppingList.prototype.onGetItemsDone = function(items) {
+ToDosList.prototype.onGetItemsDone = function(items) {
     this.items = items;
     this.updateItemsView();
 };
-ShoppingList.prototype.updateItemsView = function() {
+ToDosList.prototype.updateItemsView = function() {
     var context = {
         items: this.items
     };
@@ -222,6 +222,6 @@ ShoppingList.prototype.updateItemsView = function() {
     this.itemList = itemList;
 };
 $(document).ready(function() {
-    var app = new ShoppingList();
+    var app = new ToDosList();
 });
 </script>
